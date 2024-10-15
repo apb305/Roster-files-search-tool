@@ -44,8 +44,10 @@ This application allows users to upload multiple CSV files for cross-referencing
 
 1. Clone the repository:
    ```
-   git clone https://github.com/yourusername/roster-files-search-tool.git
+   git clone https://github.com/yourusername/Roster-files-search-tool.git
    ```
+- Navigate to the project directory by running the following command:
+     
    ```
    cd roster-files-search-tool
    ```
