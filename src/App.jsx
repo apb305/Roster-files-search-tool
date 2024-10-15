@@ -233,7 +233,7 @@ function App() {
         <Col>
           <div className="mt-5">
             <h4>Roster Files Lookup Tool</h4>
-            <small>Version 1.0</small>
+            <small>Version 1.0.0</small>
           </div>
 
           <div className="border p-3 mt-5">
