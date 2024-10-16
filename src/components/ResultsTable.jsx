@@ -3,7 +3,7 @@ import Table from "react-bootstrap/Table";
 
 function ResultsTable({ title, data }) {
   return (
-    <div className="mt-3">
+    <div className="mt-3 mb-5">
       <h4>{title}</h4>
       {data && data.length > 0 && data[0] ? (
         <Table striped bordered hover responsive>
