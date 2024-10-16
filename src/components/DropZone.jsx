@@ -22,7 +22,7 @@ function MyDropzone({ onDropFiles }) {
       {isDragActive ? (
         <p>Drop the files here ...</p>
       ) : (
-        <p className="mt-3">Drag 'n' drop some files here, or click to select files</p>
+        <p className="mt-3">Drag 'n' drop your SFF or OneRoster files here, or click to select files</p>
       )}
     </div>
   );

@@ -11,6 +11,8 @@ import FileList from "./components/FileList";
 import SearchBar from "./components/SearchBar";
 import ResultsTable from "./components/ResultsTable";
 import JSZip from "jszip";
+import checkFiles from "./utils/filesChecker";
+import HelpModal from "./components/HelpModal";
 
 function App() {
   const [csvData, setCsvData] = useState([]);
@@ -70,11 +72,7 @@ function App() {
     Promise.all(filePromises).then((parsedFiles) => {
       //Flatten any nested arrays (in case of zip files with multiple CSVs)
       const flatFiles = parsedFiles.flat();
-      if (flatFiles.length !== 4 && flatFiles.length !== 8) {
-        setErrorMessage("Please select all SFF or OneRoster files.");
-        return;
-      }
-      // Detect file type (SFF or OneRoster) based on file names
+
       let usersFile,
         classAssignmentsFile,
         classFile,
@@ -82,7 +80,13 @@ function App() {
         classesFile,
         orgsFile;
 
-      if (flatFiles.length === 4) {
+      //Get the names of the files
+      const fileNames = flatFiles.map((item) => item.name);
+
+      // Detect file type (SFF or OneRoster) based on file names
+      const result = checkFiles(fileNames);
+
+      if (result === "Simple File Format") {
         // Simple File Format (SFF)
         setFileType("Simple File Format");
         setSearchMethod("Enter LASID or Email");
@@ -100,8 +104,8 @@ function App() {
         if (usersFile && classAssignmentsFile && classFile) {
           setCsvData([usersFile, classAssignmentsFile, classFile]);
         }
-      } else if (flatFiles.length === 8) {
-        // OneRoster Format with orgs.csv
+      } else if (result === "OneRoster") {
+        // OneRoster Format
         setFileType("OneRoster");
         setSearchMethod("Enter sourcedId or Email");
         flatFiles.forEach((parsedFile) => {
@@ -118,6 +122,8 @@ function App() {
         if (usersFile && enrollmentsFile && classesFile && orgsFile) {
           setCsvData([usersFile, enrollmentsFile, classesFile, orgsFile]);
         }
+      } else if (result === "Invalid files") {
+        setErrorMessage("Please make sure to include at least users.csv, classassignments.csv, and class.csv for the Simple File Format (SFF) and users.csv, enrollments.csv, classes.csv, and orgs.csv for OneRoster.");
       }
     });
   };
@@ -129,10 +135,7 @@ function App() {
 
   // Function to handle search submit
   const handleSearchSubmit = () => {
-    if (!searchQuery.trim()) {
-      setFilteredUserData(null);
-      setClassAssociations([]);
-      setSearchPerformed(false);
+    if (!searchQuery) {
       return;
     }
 
@@ -235,6 +238,9 @@ function App() {
             <h4>Roster Files Lookup Tool</h4>
             <small>Version 1.0.0</small>
           </div>
+          <div>
+            <HelpModal/>
+            </div>
 
           <div className="border p-3 mt-5">
             <Form.Group
@@ -251,12 +257,14 @@ function App() {
             {errorMessage ? (
               <p className="text-danger">{errorMessage}</p>
             ) : (
-              <SearchBar
-                searchQuery={searchQuery}
-                handleSearchChange={handleSearchChange}
-                handleSearchSubmit={handleSearchSubmit}
-                searchMethod={searchMethod}
-              />
+              selectedFiles.length > 0 && (
+                <SearchBar
+                  searchQuery={searchQuery}
+                  handleSearchChange={handleSearchChange}
+                  handleSearchSubmit={handleSearchSubmit}
+                  searchMethod={searchMethod}
+                />
+              )
             )}
           </div>
 
