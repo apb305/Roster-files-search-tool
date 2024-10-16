@@ -123,7 +123,7 @@ function App() {
           setCsvData([usersFile, enrollmentsFile, classesFile, orgsFile]);
         }
       } else if (result === "Invalid files") {
-        setErrorMessage("Please make sure to include at least users.csv, classassignments.csv, and class.csv for the Simple File Format (SFF) and users.csv, enrollments.csv, classes.csv, and orgs.csv for OneRoster.");
+        setErrorMessage("Please make sure to include the users.csv, classassignments.csv, and class.csv for Simple File Format (SFF) and users.csv, enrollments.csv, classes.csv, and orgs.csv for OneRoster.");
       }
     });
   };
