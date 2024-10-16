@@ -89,7 +89,7 @@ function App() {
       if (result === "Simple File Format") {
         // Simple File Format (SFF)
         setFileType("Simple File Format");
-        setSearchMethod("Enter LASID or Email");
+        setSearchMethod("Enter LASID, username, or email");
         flatFiles.forEach((parsedFile) => {
           if (parsedFile.name.toLowerCase().includes("users")) {
             usersFile = parsedFile;
@@ -107,7 +107,7 @@ function App() {
       } else if (result === "OneRoster") {
         // OneRoster Format
         setFileType("OneRoster");
-        setSearchMethod("Enter sourcedId or Email");
+        setSearchMethod("Enter sourcedId, username, or email");
         flatFiles.forEach((parsedFile) => {
           if (parsedFile.name.toLowerCase().includes("users")) {
             usersFile = parsedFile;
@@ -164,11 +164,12 @@ function App() {
     const classAssignmentsFile = csvData[1].data;
     const classFile = csvData[2].data;
 
-    // Find the user by LASID or EMAIL
+    // Find the user by LASID, username, email
     const matchedUser = usersFile.find(
       (user) =>
         user["LASID"]?.toLowerCase() === searchQuery.toLowerCase() ||
-        user["PRIMARYEMAIL"]?.toLowerCase() === searchQuery.toLowerCase()
+        user["PRIMARYEMAIL"]?.toLowerCase() === searchQuery.toLowerCase() ||
+        user["USERNAME"]?.toLowerCase()=== searchQuery.toLowerCase()
     );
 
     if (!matchedUser) return { user: null, classes: [] };
@@ -195,11 +196,12 @@ function App() {
     const classesFile = csvData[2].data;
     const orgsFile = csvData[3].data;
 
-    // Find the user by sourcedId or email
+    // Find the user by sourcedId, username, or email
     const matchedUser = usersFile.find(
       (user) =>
         user["sourcedId"]?.toLowerCase() === searchQuery.toLowerCase() ||
-        user["email"]?.toLowerCase() === searchQuery.toLowerCase()
+        user["email"]?.toLowerCase() === searchQuery.toLowerCase() ||
+        user["username"]?.toLowerCase() === searchQuery.toLowerCase()
     );
 
     if (!matchedUser) return { user: null, classes: [], orgs: [] };
