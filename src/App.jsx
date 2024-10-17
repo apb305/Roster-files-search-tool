@@ -6,6 +6,7 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
+import Spinner from "react-bootstrap/Spinner";
 import MyDropzone from "./components/DropZone";
 import FileList from "./components/FileList";
 import SearchBar from "./components/SearchBar";
@@ -25,11 +26,13 @@ function App() {
   const [searchMethod, setSearchMethod] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [orgAssociations, setOrgAssociations] = useState([]);
-  const [fileTimes, setFileTimes] = useState([]);
+  const [loading, setLoading] = useState(false);
+  // const [fileTimes, setFileTimes] = useState([]);
 
   // Function to handle file selection and parsing with Papa Parse
   const handleFileDrop = (acceptedFiles) => {
     setErrorMessage("");
+    setLoading(true); // Start the loading spinner
     setSelectedFiles(acceptedFiles);
     const filePromises = acceptedFiles.map(async (file) => {
       //Handle zip file
@@ -80,6 +83,8 @@ function App() {
         classesFile,
         orgsFile;
 
+      setLoading(false); // Stop the loading spinner once complete
+
       //Get the names of the files
       const fileNames = flatFiles.map((item) => item.name);
 
@@ -123,7 +128,9 @@ function App() {
           setCsvData([usersFile, enrollmentsFile, classesFile, orgsFile]);
         }
       } else if (result === "Invalid files") {
-        setErrorMessage("Please make sure to include the users.csv, classassignments.csv, and class.csv for Simple File Format (SFF) and users.csv, enrollments.csv, classes.csv, and orgs.csv for OneRoster.");
+        setErrorMessage(
+          "Please make sure to include the users.csv, classassignments.csv, and class.csv for Simple File Format (SFF) and users.csv, enrollments.csv, classes.csv, and orgs.csv for OneRoster."
+        );
       }
     });
   };
@@ -169,7 +176,7 @@ function App() {
       (user) =>
         user["LASID"]?.toLowerCase() === searchQuery.toLowerCase() ||
         user["PRIMARYEMAIL"]?.toLowerCase() === searchQuery.toLowerCase() ||
-        user["USERNAME"]?.toLowerCase()=== searchQuery.toLowerCase()
+        user["USERNAME"]?.toLowerCase() === searchQuery.toLowerCase()
     );
 
     if (!matchedUser) return { user: null, classes: [] };
@@ -241,8 +248,8 @@ function App() {
             <small>Version 1.0.0</small>
           </div>
           <div>
-            <HelpModal/>
-            </div>
+            <HelpModal />
+          </div>
 
           <div className="border p-3 mt-5">
             <Form.Group
@@ -270,19 +277,29 @@ function App() {
             )}
           </div>
 
-          {/* Conditionally render tables based on searchPerformed and fileType */}
-          {searchPerformed && (
-            <>
-              <ResultsTable title="User Data" data={[filteredUserData]} />
-              <ResultsTable
-                title="Class Associations"
-                data={classAssociations}
-              />
-              {fileType === "OneRoster" && (
-                <ResultsTable title="Org Associations" data={orgAssociations} />
-              )}
-            </>
+          {loading && (
+            <Spinner animation="border" role="status">
+              <span className="visually-hidden">Loading...</span>
+            </Spinner>
           )}
+
+          {/* Conditionally render tables based on searchPerformed and fileType */}
+          {searchPerformed &&
+            !loading(
+              <>
+                <ResultsTable title="User Data" data={[filteredUserData]} />
+                <ResultsTable
+                  title="Class Associations"
+                  data={classAssociations}
+                />
+                {fileType === "OneRoster" && (
+                  <ResultsTable
+                    title="Org Associations"
+                    data={orgAssociations}
+                  />
+                )}
+              </>
+            )}
         </Col>
       </Row>
     </Container>
