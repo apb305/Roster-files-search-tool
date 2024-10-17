@@ -266,7 +266,8 @@ function App() {
             {errorMessage ? (
               <p className="text-danger">{errorMessage}</p>
             ) : (
-              selectedFiles.length > 0 && !loading && (
+              selectedFiles.length > 0 &&
+              !loading && (
                 <SearchBar
                   searchQuery={searchQuery}
                   handleSearchChange={handleSearchChange}
@@ -275,30 +276,26 @@ function App() {
                 />
               )
             )}
+            {loading && (
+              <Spinner animation="border" role="status">
+                <span className="visually-hidden">Loading...</span>
+              </Spinner>
+            )}
           </div>
-
-          {loading && (
-            <Spinner animation="border" role="status">
-              <span className="visually-hidden">Loading...</span>
-            </Spinner>
-          )}
 
           {/* Conditionally render tables based on searchPerformed and fileType */}
           {searchPerformed && (
-              <>
-                <ResultsTable title="User Data" data={[filteredUserData]} />
-                <ResultsTable
-                  title="Class Associations"
-                  data={classAssociations}
-                />
-                {fileType === "OneRoster" && (
-                  <ResultsTable
-                    title="Org Associations"
-                    data={orgAssociations}
-                  />
-                )}
-              </>
-            )}
+            <>
+              <ResultsTable title="User Data" data={[filteredUserData]} />
+              <ResultsTable
+                title="Class Associations"
+                data={classAssociations}
+              />
+              {fileType === "OneRoster" && (
+                <ResultsTable title="Org Associations" data={orgAssociations} />
+              )}
+            </>
+          )}
         </Col>
       </Row>
     </Container>
