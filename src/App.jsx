@@ -285,7 +285,7 @@ function App() {
 
           {/* Conditionally render tables based on searchPerformed and fileType */}
           {searchPerformed &&
-            !loading(
+            !loading && (
               <>
                 <ResultsTable title="User Data" data={[filteredUserData]} />
                 <ResultsTable
