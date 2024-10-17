@@ -266,7 +266,7 @@ function App() {
             {errorMessage ? (
               <p className="text-danger">{errorMessage}</p>
             ) : (
-              selectedFiles.length > 0 && (
+              selectedFiles.length > 0 && !loading && (
                 <SearchBar
                   searchQuery={searchQuery}
                   handleSearchChange={handleSearchChange}
@@ -284,8 +284,7 @@ function App() {
           )}
 
           {/* Conditionally render tables based on searchPerformed and fileType */}
-          {searchPerformed &&
-            !loading && (
+          {searchPerformed && (
               <>
                 <ResultsTable title="User Data" data={[filteredUserData]} />
                 <ResultsTable
