@@ -35,34 +35,44 @@ function App() {
     setLoading(true); // Start the loading spinner
     setSelectedFiles(acceptedFiles);
     const filePromises = acceptedFiles.map(async (file) => {
-      //Handle zip file
-      if (file.name.endsWith(".zip")) {
-        const zip = new JSZip();
-        const zipData = await zip.loadAsync(file);
-        const extractedFiles = [];
+      //Handle zip files
+    if (file.name.endsWith(".zip")) {
+      const zip = new JSZip();
+      const zipData = await zip.loadAsync(file);
 
-        for (const fileName in zipData.files) {
-          if (zipData.files[fileName].name.endsWith(".csv")) {
-            const fileContent = await zipData.files[fileName].async("text");
+      // Create an array of promises for each CSV file in the ZIP
+      const filePromises = Object.keys(zipData.files).map(async (fileName) => {
+        if (fileName.endsWith(".csv")) {
+          const fileContent = await zipData.files[fileName].async("text");
+
+          return new Promise((resolve) => {
+            const results = [];
             Papa.parse(fileContent, {
               header: true,
               worker: true,
               step: (row) => {
-                extractedFiles.push(row.data);
+                results.push(row.data);
               },
-              complete: (result) => {
-                extractedFiles.push({
+              complete: () => {
+                resolve({
                   name: fileName,
-                  data: result.data,
+                  data: results,
                 });
               },
             });
-          }
+          });
         }
-        setSelectedFiles(extractedFiles);
+      });
 
-        return extractedFiles;
-      } else {
+      // Wait for all CSV files in the ZIP to be parsed
+      const extractedFiles = await Promise.all(filePromises);
+
+      // Filter out undefined entries in case of non-CSV files
+      const validFiles = extractedFiles.filter(Boolean);
+
+      return validFiles; // Return all parsed files
+    }  else {
+      //Handle non-zipped csv files
         return new Promise((resolve, reject) => {
           const results = [];
           Papa.parse(file, {
@@ -71,8 +81,8 @@ function App() {
             step: (row) => {
               results.push(row.data);
             },
-            complete: (result) => {
-              resolve({ name: file.name, data: result.data });
+            complete: () => {
+              resolve({ name: file.name, data: results });
             },
             error: (error) => reject(error),
           });
