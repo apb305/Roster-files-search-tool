@@ -46,6 +46,10 @@ function App() {
             const fileContent = await zipData.files[fileName].async("text");
             Papa.parse(fileContent, {
               header: true,
+              worker: true,
+              step: (row) => {
+                extractedFiles.push(row.data);
+              },
               complete: (result) => {
                 extractedFiles.push({
                   name: fileName,
@@ -60,8 +64,13 @@ function App() {
         return extractedFiles;
       } else {
         return new Promise((resolve, reject) => {
+          const results = [];
           Papa.parse(file, {
             header: true,
+            worker: true,
+            step: (row) => {
+              results.push(row.data);
+            },
             complete: (result) => {
               resolve({ name: file.name, data: result.data });
             },
