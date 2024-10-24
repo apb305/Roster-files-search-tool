@@ -4,7 +4,7 @@ import Table from "react-bootstrap/Table";
 function ResultsTable({ title, data }) {
   return (
     <div className="mt-3 mb-5">
-      <h4>{title}</h4>
+      <h4>{title} {title !== "User Data" && `(${data.length})`}</h4>
       {data && data.length > 0 && data[0] ? (
         <Table striped bordered hover responsive>
           <thead>
