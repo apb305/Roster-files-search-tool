@@ -13,6 +13,7 @@ function MyDropzone({ onDropFiles }) {
       {...getRootProps()}
       style={{
         border: "2px dashed #cccccc",
+        background: "white",
         padding: "40px",
         textAlign: "center",
         cursor: "pointer",

@@ -270,7 +270,7 @@ function App() {
             <HelpModal />
           </div>
 
-          <div className="border p-3 mt-5">
+          <div className="border p-3 mt-5 shadow-sm rounded bg-light">
             <Form.Group
               controlId="formFileMultiple"
               className="mb-3 text-start"
