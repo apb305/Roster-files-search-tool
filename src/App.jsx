@@ -105,7 +105,7 @@ function App() {
       setLoading(false); // Stop the loading spinner once complete
 
       //Get the names of the files
-      const fileNames = flatFiles.map((item) => item.name);
+      const fileNames = flatFiles.map((item) => item.name.toLowerCase());
 
       // Detect file type (SFF or OneRoster) based on file names
       const result = checkFiles(fileNames);
