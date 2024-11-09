@@ -115,13 +115,13 @@ function App() {
         setFileType("Simple File Format");
         setSearchMethod("Enter LASID, username, or email");
         flatFiles.forEach((parsedFile) => {
-          if (parsedFile.name.toLowerCase().includes("users")) {
+          if (parsedFile.name.toLowerCase().includes("users") || parsedFile.name.toLowerCase().includes("user")) {
             usersFile = parsedFile;
           } else if (
-            parsedFile.name.toLowerCase().includes("classassignments")
+            parsedFile.name.toLowerCase().includes("classassignments") || parsedFile.name.toLowerCase().includes("classassignment")
           ) {
             classAssignmentsFile = parsedFile;
-          } else if (parsedFile.name.toLowerCase().includes("class")) {
+          } else if (parsedFile.name.toLowerCase().includes("class") || parsedFile.name.toLowerCase().includes("classes")) {
             classFile = parsedFile;
           }
         });
