@@ -205,8 +205,6 @@ function App() {
       (assignment) => assignment["LASID"] === matchedUser["LASID"]
     );
 
-    if(!matchingAssignments) return {user: matchedUser, classes: []}
-
     // Find all classes for those CLASSLOCALIDs
     const matchingClasses = matchingAssignments.map((assignment) =>
       classFile.find(
